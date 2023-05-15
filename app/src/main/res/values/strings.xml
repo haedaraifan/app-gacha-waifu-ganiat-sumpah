@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Gacha Waifu</string>
+
+    <string-array name="onboarding_title">
+        <item>Gacha waifu</item>
+        <item>Wangy wangy</item>
+        <item>100% waras</item>
+    </string-array>
+
+    <string-array name="onboarding_description">
+        <item>Lorem ipsum</item>
+        <item>Lorem ipsum</item>
+        <item>Lorem ipsum</item>
+    </string-array>
+</resources>

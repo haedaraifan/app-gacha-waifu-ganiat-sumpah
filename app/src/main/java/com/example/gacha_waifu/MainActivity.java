@@ -32,6 +32,12 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+        System.out.println("Ini Tes Push dari orang lain");
+        System.out.println("Ini Tes Push dari orang lain");
+        System.out.println("Ini Tes Push dari orang lain");
+        System.out.println("Ini Tes Push dari orang lain");
+        System.out.println("Ini Tes Push dari orang lain");
+        System.out.println("Ini Tes Push dari orang lain");
 
         preferences = new Preferences(this);
 

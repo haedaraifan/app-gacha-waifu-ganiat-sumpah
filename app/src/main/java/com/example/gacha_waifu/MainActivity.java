@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         preferences = new Preferences(this);
         String newJsonData = preferences.getImageList();
-        if(!newJsonData.equals("")) {
+        if(!isPreferenceEmpty()) {
             Type type = new TypeToken<ArrayList<String>>(){}.getType();
             ArrayList<String> newDatas = new Gson().fromJson(newJsonData, type);
 
@@ -69,10 +69,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                updatePreferences();
-
-                Intent intent = new Intent(MainActivity.this, StorageActivity.class);
-                startActivity(intent);
+                if(!isPreferenceEmpty()) {
+                    Intent intent = new Intent(MainActivity.this, StorageActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(MainActivity.this, "Empty", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -135,6 +137,10 @@ public class MainActivity extends AppCompatActivity {
 
     private int getLastIndex() {
         return datas.size() - 1;
+    }
+
+    private boolean isPreferenceEmpty() {
+        return preferences.getImageList().equals("");
     }
 
     private void updatePreferences() {

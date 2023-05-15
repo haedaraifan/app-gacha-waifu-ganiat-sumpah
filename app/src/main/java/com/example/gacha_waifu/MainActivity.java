@@ -3,6 +3,7 @@ package com.example.gacha_waifu;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -45,6 +46,16 @@ public class MainActivity extends AppCompatActivity {
             ArrayList<String> newDatas = new Gson().fromJson(newJsonData, type);
 
             datas.addAll(newDatas);
+
+            String imageUrl = datas.get(getLastIndex());
+
+            Picasso.get()
+                    .load(imageUrl)
+                    .placeholder(R.drawable.onboarding_3)
+                    .error(R.drawable.not_found)
+                    .into(binding.ivResult);
+        } else {
+            binding.ivResult.setImageResource(R.drawable.onboarding_3);
         }
 
         binding.btnWish.setOnClickListener(new View.OnClickListener() {
@@ -58,8 +69,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String jsonData = new Gson().toJson(datas);
-                preferences.setImageList(jsonData);
+                updatePreferences();
 
                 Intent intent = new Intent(MainActivity.this, StorageActivity.class);
                 startActivity(intent);
@@ -104,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
                         Toast.makeText(MainActivity.this, imageUrl, Toast.LENGTH_SHORT).show();
 
+                        updatePreferences();
                         Picasso.get()
                                 .load(imageUrl)
                                 .placeholder(R.drawable.onboarding_3)
@@ -120,5 +131,14 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Something went wrong... Please try again", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private int getLastIndex() {
+        return datas.size() - 1;
+    }
+
+    private void updatePreferences() {
+        String jsonData = new Gson().toJson(datas);
+        preferences.setImageList(jsonData);
     }
 }

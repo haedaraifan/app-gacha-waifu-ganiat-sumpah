@@ -3,15 +3,21 @@ package com.example.gacha_waifu;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.example.gacha_waifu.databinding.ActivityStorageBinding;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class StorageActivity extends AppCompatActivity {
     private ActivityStorageBinding binding;
+    private Preferences preferences;
+    StorageAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,13 +26,23 @@ public class StorageActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-//        ArrayList<String> images = getListImage();
-//        StorageAdapter adapter = new StorageAdapter(images);
-//        binding.rvImage.setLayoutManager(new GridLayoutManager(this, 2));
-//        binding.rvImage.setAdapter(adapter);
-    }
+        preferences = new Preferences(this);
+        String jsonData = preferences.getImageList();
+        if(!jsonData.equals("")) {
+            Type type = new TypeToken<ArrayList<String>>(){}.getType();
+            ArrayList<String> datas = new Gson().fromJson(jsonData, type);
+            adapter = new StorageAdapter(datas);
+        }
 
-//    private ArrayList<String> getListImage() {
-//
-//    }
+        binding.rvImage.setLayoutManager(new GridLayoutManager(this, 2));
+        binding.rvImage.setAdapter(adapter);
+
+        binding.btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StorageActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
 }

@@ -10,7 +10,7 @@ public class Preferences {
     SharedPreferences pref;
     Editor editor;
     private final String sessionLogin = "session_login";
-    private final String userList = "user_list";
+    private final String imageList = "image_list";
 
     public Preferences(Context context) {
         pref = context.getSharedPreferences("myPref", context.MODE_PRIVATE);
@@ -24,5 +24,14 @@ public class Preferences {
 
     public boolean getSessionLogin() {
         return pref.getBoolean(sessionLogin, false);
+    }
+
+    public void setImageList(String value) {
+        editor.putString(imageList, value);
+        editor.commit();
+    }
+
+    public String getImageList() {
+        return pref.getString(imageList, "");
     }
 }

@@ -6,6 +6,6 @@ import retrofit2.http.GET;
 
 public interface ApiService {
 
-    @GET("sfw/blush")
+    @GET("sfw/waifu")
     Call<ResponseBody> getImage();
 }

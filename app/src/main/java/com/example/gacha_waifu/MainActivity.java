@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.gacha_waifu.databinding.ActivityMainBinding;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -16,6 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -25,6 +29,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private Preferences preferences;
+    private ArrayList<String> datas = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,19 +37,32 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        System.out.println("Ini Tes Push dari orang lain");
-        System.out.println("Ini Tes Push dari orang lain");
-        System.out.println("Ini Tes Push dari orang lain");
-        System.out.println("Ini Tes Push dari orang lain");
-        System.out.println("Ini Tes Push dari orang lain");
-        System.out.println("Ini Tes Push dari orang lain");
 
         preferences = new Preferences(this);
+        String newJsonData = preferences.getImageList();
+        if(!newJsonData.equals("")) {
+            Type type = new TypeToken<ArrayList<String>>(){}.getType();
+            ArrayList<String> newDatas = new Gson().fromJson(newJsonData, type);
+
+            datas.addAll(newDatas);
+        }
 
         binding.btnWish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getDataPicture();
+            }
+        });
+
+        binding.btnHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String jsonData = new Gson().toJson(datas);
+                preferences.setImageList(jsonData);
+
+                Intent intent = new Intent(MainActivity.this, StorageActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -82,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
 //                        JSONObject artist = data.getJSONObject("artist");
 //                        String name = artist.getString("name");
                         String imageUrl = jsonResponse.getString("url");
+                        datas.add(imageUrl);
 
                         Toast.makeText(MainActivity.this, imageUrl, Toast.LENGTH_SHORT).show();
 

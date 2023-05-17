@@ -39,11 +39,28 @@
         android:textColor="@color/black"
         app:cornerRadius="10dp"/>
 
+
     <Button
-        android:id="@+id/btn_logout"
-        android:layout_width="match_parent"
+        android:id="@+id/btn_clear"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_logout"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="CLear"
+        android:paddingVertical="12dp"
+        android:textColor="@color/black"
+        app:cornerRadius="10dp"/>
+
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_clear"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="10dp"
         android:text="Logout"
         android:paddingVertical="12dp"

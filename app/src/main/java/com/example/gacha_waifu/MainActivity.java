@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
             Picasso.get()
                     .load(imageUrl)
                     .placeholder(R.drawable.onboarding_3)
-                    .error(R.drawable.not_found)
                     .into(binding.ivResult);
         } else {
             binding.ivResult.setImageResource(R.drawable.onboarding_3);
@@ -73,15 +72,24 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, StorageActivity.class);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(MainActivity.this, "Empty", Toast.LENGTH_SHORT).show();
+                    toastMessage("Empty ...");
                 }
+            }
+        });
+
+        binding.btnClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datas.clear();
+                preferences.setImageList("");
+                toastMessage("Clear ...");
             }
         });
 
         binding.btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Logout ...", Toast.LENGTH_SHORT).show();
+                toastMessage("Logout ...");
                 preferences.setSessionLogin(false);
 
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -114,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                         String imageUrl = jsonResponse.getString("url");
                         datas.add(imageUrl);
 
-                        Toast.makeText(MainActivity.this, imageUrl, Toast.LENGTH_SHORT).show();
+                        toastMessage(imageUrl);
 
                         updatePreferences();
                         Picasso.get()
@@ -130,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Something went wrong... Please try again", Toast.LENGTH_SHORT).show();
+                toastMessage("Something went wrong... Please try again");
             }
         });
     }
@@ -141,6 +149,10 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isPreferenceEmpty() {
         return preferences.getImageList().equals("");
+    }
+
+    private void toastMessage(String message) {
+        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 
     private void updatePreferences() {

@@ -1,18 +1,24 @@
 package com.example.gacha_waifu;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.gacha_waifu.database.AppDatabase;
+import com.example.gacha_waifu.database.User;
 import com.example.gacha_waifu.databinding.ActivityLoginBinding;
+
+import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     private String username, password;
-    Preferences preferences;
+    private AppDatabase db;
+    private ArrayList<User> users = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,10 +27,10 @@ public class LoginActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        preferences = new Preferences(this);
-        if(preferences.getSessionLogin()) {
-            goToMainActivity();
-        }
+        db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "db_user").allowMainThreadQueries().build();
+
+        users.addAll(db.userDao().getAllUser());
 
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,6 +45,14 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
+        binding.btnRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private boolean formIsEmpty() {
@@ -48,9 +62,21 @@ public class LoginActivity extends AppCompatActivity {
     private void loginProcess() {
 
         if(username.equals("admin") && password.equals("admin")) {
-            preferences.setSessionLogin(true);
             goToMainActivity();
-        } else {
+        }
+        else if(users.size() != 0) {
+
+            for(int i = 0; i < users.size(); i++) {
+
+                String userOnDB = users.get(i).username;
+                String passwordOnDB = users.get(i).password;
+
+                if(username.equals(userOnDB) && password.equals(passwordOnDB)) {
+                    goToMainActivity();
+                }
+            }
+        }
+        else {
             toastMessage("Incorrect");
         }
     }
